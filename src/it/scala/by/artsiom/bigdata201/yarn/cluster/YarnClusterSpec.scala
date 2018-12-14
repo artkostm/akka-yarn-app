@@ -1,4 +1,4 @@
-package by.artsiom.bihdata201.yarn.cluster
+package by.artsiom.bigdata201.yarn.cluster
 
 import com.github.sakserv.minicluster.MiniCluster
 import com.github.sakserv.minicluster.impl.YarnLocalCluster
