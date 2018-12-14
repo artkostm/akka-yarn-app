@@ -24,14 +24,14 @@ object Dependencies {
   )
 
   lazy val unit = test.map(_ % Test) ++ Seq(
-    )
+  )
 
   lazy val it = test.map(_ % IntegrationTest) ++ (for {
     (t, vh, vm) <- Seq((IntegrationTest, versions.hadoop, versions.minicluster))
     d <- Seq(
           "org.apache.hadoop"  % "hadoop-client"                     % vh % t,
           "org.apache.hadoop"  % "hadoop-minicluster"                % vh % t,
-          "org.apache.hadoop"  % "hadoop-yarn-server-tests"          % vh % t,
+          "org.apache.hadoop"  % "hadoop-yarn-server-tests"          % vh % t classifier tests,
           "org.apache.hadoop"  % "hadoop-yarn-api"                   % vh % t,
           "org.apache.hadoop"  % "hadoop-mapreduce-client-app"       % vh % t,
           "org.apache.hadoop"  % "hadoop-mapreduce-client-core"      % vh % t,
