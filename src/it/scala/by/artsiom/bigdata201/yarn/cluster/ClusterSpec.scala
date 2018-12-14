@@ -1,4 +1,5 @@
-package by.artsiom.bihdata201.yarn.cluster
+package by.artsiom.bigdata201.yarn.cluster
+
 import java.util.concurrent.atomic.AtomicBoolean
 
 import com.github.sakserv.minicluster.MiniCluster
