@@ -8,3 +8,13 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Dependencies.it,
     dependencyOverrides ++= Dependencies.overrides
   )
+  .settings(sourceGenerators in Compile += Def.task {
+    val file = (sourceManaged in Compile).value / "info.scala"
+    IO.write(file, """package by.artsiom.bigdata201.yarn
+                     |object Info {
+                     |  val version = "%s"
+                     |  val name = "%s"
+                     |}
+                     |""".stripMargin.format(version.value, name.value))
+    Seq(file)
+  }.taskValue)
