@@ -6,7 +6,7 @@ import org.apache.hadoop.fs.FileSystem
 import org.scalatest.{BeforeAndAfterAll, Suite}
 
 trait HdfsClusterSpec extends BeforeAndAfterAll { this: Suite =>
-  val fs: FileSystem = HdfsClusterSpec.cluster.getHdfsFileSystemHandle
+  def fs: FileSystem = HdfsClusterSpec.cluster.getHdfsFileSystemHandle
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()

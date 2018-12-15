@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import com.github.sakserv.minicluster.MiniCluster
 
-trait ClusterSpec {
+trait Cluster {
   private val started = new AtomicBoolean(false)
   private val stopped = new AtomicBoolean(false)
 
