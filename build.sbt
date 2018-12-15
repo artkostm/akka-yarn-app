@@ -11,10 +11,11 @@ lazy val root = (project in file("."))
   .settings(sourceGenerators in Compile += Def.task {
     val file = (sourceManaged in Compile).value / "info.scala"
     IO.write(file, """package by.artsiom.bigdata201.yarn
-                     |object Info {
-                     |  val version = "%s"
-                     |  val name = "%s"
+                     |object BuildInfo {
+                     |  val Version = "%s"
+                     |  val Name = "%s"
+                     |  val JarName = "%s"
                      |}
-                     |""".stripMargin.format(version.value, name.value))
+                     |""".stripMargin.format(version.value, name.value, (assemblyJarName in assembly).value))
     Seq(file)
   }.taskValue)
