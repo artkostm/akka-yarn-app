@@ -7,7 +7,7 @@
 *.log
 
 # Package Files #
-*.jar
+# *.jar
 *.war
 *.ear
 *.zip
@@ -25,3 +25,5 @@ hs_err_pid*
 *.iml
 **/testCsv*/*
 **/checkpoint*/*
+embedded_hdfs/**
+embedded_zookeeper/**
