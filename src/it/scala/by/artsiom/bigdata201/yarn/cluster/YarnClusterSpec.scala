@@ -5,19 +5,19 @@ import com.github.sakserv.minicluster.impl.YarnLocalCluster
 import org.apache.hadoop.conf.Configuration
 import org.scalatest.{BeforeAndAfterAll, Suite}
 
-trait YarnClusterSpec extends BeforeAndAfterAll { this: Suite =>
+trait YarnCluster$ extends BeforeAndAfterAll { this: Suite =>
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    YarnClusterSpec.start()
+    YarnCluster$.start()
   }
 
   override protected def afterAll(): Unit = {
     super.afterAll()
-    YarnClusterSpec.stop()
+    YarnCluster$.stop()
   }
 }
 
-object YarnClusterSpec extends ClusterSpec {
+object YarnCluster$ extends Cluster {
   override protected val cluster: MiniCluster = new YarnLocalCluster.Builder()
     .setNumNodeManagers(1)
     .setNumLocalDirs(1)

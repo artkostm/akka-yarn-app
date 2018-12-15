@@ -1,11 +1,13 @@
 package by.artsiom.bigdata201.yarn.cluster
 
-import com.github.sakserv.minicluster.MiniCluster
 import com.github.sakserv.minicluster.impl.HdfsLocalCluster
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.FileSystem
 import org.scalatest.{BeforeAndAfterAll, Suite}
 
 trait HdfsClusterSpec extends BeforeAndAfterAll { this: Suite =>
+  val fs: FileSystem = HdfsClusterSpec.cluster.getHdfsFileSystemHandle
+
   override protected def beforeAll(): Unit = {
     super.beforeAll()
     HdfsClusterSpec.start()
@@ -17,9 +19,9 @@ trait HdfsClusterSpec extends BeforeAndAfterAll { this: Suite =>
   }
 }
 
-object HdfsClusterSpec extends ClusterSpec {
+object HdfsClusterSpec extends Cluster {
 
-  override protected val cluster: MiniCluster = new HdfsLocalCluster.Builder()
+  override protected val cluster = new HdfsLocalCluster.Builder()
     .setHdfsNamenodePort(12345)
     .setHdfsNamenodeHttpPort(12341)
     .setHdfsTempDir("embedded_hdfs")
