@@ -5,8 +5,8 @@ import by.artsiom.bigdata201.yarn.cluster.{HdfsClusterSpec, YarnClusterSpec, Zoo
 import org.apache.hadoop.fs.Path
 import org.scalatest.FlatSpec
 
-class TestHdfsUtility extends FlatSpec with HdfsClusterSpec with YarnClusterSpec with ZookeeperClusterSpec {
-  "This test" should "start/stop mincluster" in {
+class LaunchYarnAppIntegTest extends FlatSpec with HdfsClusterSpec with YarnClusterSpec with ZookeeperClusterSpec {
+  "TLauncherMain" should "start yarn app" in {
     println("Running!!!!")
     fs.listStatus(new Path("/")).foreach { fileStatus =>
       println(fileStatus.getPath)
@@ -21,7 +21,10 @@ class TestHdfsUtility extends FlatSpec with HdfsClusterSpec with YarnClusterSpec
     LauncherMain.main(Array(
       "--akkeeperJar", "src/it/resources/akkeeper-assembly-0.3.3.jar",
       "--config", "src/it/resources/test.conf",
-      "--jars", "src/it/resources/hadoop-common-2.7.3.2.6.3.0-235.jar,src/it/resources/hadoop-hdfs-2.7.3.2.6.3.0-235.jar,src/it/resources/hadoop-core-1.2.1.jar",
+      "--jars",
+        "src/it/resources/hadoop-common-2.7.3.2.6.3.0-235.jar," +
+        "src/it/resources/hadoop-hdfs-2.7.3.2.6.3.0-235.jar," +
+        "src/it/resources/hadoop-core-1.2.1.jar",
       s"target/scala-2.12/${BuildInfo.JarName}"
     ))
 
