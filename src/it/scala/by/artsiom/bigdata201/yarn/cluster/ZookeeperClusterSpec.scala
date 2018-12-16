@@ -25,6 +25,6 @@ object ZookeeperClusterSpec extends Cluster {
     .setQuorumPort(20002)
     .setDeleteDataDirectoryOnClose(true)
     .setServerId(1)
-    .setTickTime(2000)
+    .setTickTime(5000)
     .build()
 }
