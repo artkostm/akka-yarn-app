@@ -10,15 +10,13 @@ trait Cluster {
 
   protected val cluster: MiniCluster
 
-  def start() = {
+  def start() =
     if (started.compareAndSet(false, true)) {
       cluster.start()
     }
-  }
 
-  def stop() = {
+  def stop() =
     if (stopped.compareAndSet(false, true)) {
       cluster.stop()
     }
-  }
 }

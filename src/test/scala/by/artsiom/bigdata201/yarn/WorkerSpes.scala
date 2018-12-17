@@ -8,8 +8,12 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 
 import scala.concurrent.duration._
 
-class WorkerSpes extends TestKit(ActorSystem("WorkerSpec"))
-  with ImplicitSender with FlatSpecLike with Matchers with BeforeAndAfterAll {
+class WorkerSpes
+    extends TestKit(ActorSystem("WorkerSpec"))
+    with ImplicitSender
+    with FlatSpecLike
+    with Matchers
+    with BeforeAndAfterAll {
 
   implicit val ex = system.dispatcher
 
@@ -21,13 +25,14 @@ class WorkerSpes extends TestKit(ActorSystem("WorkerSpec"))
 
     worker ! Task(receiver.ref, "src/test/resources/test.csv", 3)
 
-    receiver.expectMsg(5 seconds, TaskResult(
-      Map(
-        ("105", "29") -> 42,
-        ("151", "69") -> 37,
-        ("50", "675") -> 12
-      )
-    ))
+    receiver.expectMsg(5 seconds,
+                       TaskResult(
+                         Map(
+                           ("105", "29") -> 42,
+                           ("151", "69") -> 37,
+                           ("50", "675") -> 12
+                         )
+                       ))
   }
 
   "Worker actor" should "be terminated for wrong task setting" in {
@@ -46,7 +51,6 @@ class WorkerSpes extends TestKit(ActorSystem("WorkerSpec"))
     assert(message.contains(wrongFilePath))
   }
 
-  override def afterAll: Unit = {
+  override def afterAll: Unit =
     TestKit.shutdownActorSystem(system)
-  }
 }

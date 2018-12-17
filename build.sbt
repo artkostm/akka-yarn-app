@@ -25,9 +25,7 @@ lazy val root = (project in file("."))
         |  val Name = "%s"
         |  val JarName = "%s"
         |}
-        |""".stripMargin.format(version.value,
-                                             name.value,
-                                             (assemblyJarName in assembly).value)
+        |""".stripMargin.format(version.value, name.value, (assemblyJarName in assembly).value)
     )
     Seq(file)
   }.taskValue)

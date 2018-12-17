@@ -13,10 +13,14 @@ import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpecLike}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
-class HdfsReaderIntegTest extends WordSpecLike with HdfsClusterSpec with Matchers with BeforeAndAfterEach {
+class HdfsReaderIntegTest
+    extends WordSpecLike
+    with HdfsClusterSpec
+    with Matchers
+    with BeforeAndAfterEach {
   import util.ScalaTestUtils._
 
-  implicit val system: ActorSystem = ActorSystem()
+  implicit val system: ActorSystem    = ActorSystem()
   implicit val mat: ActorMaterializer = ActorMaterializer()
 
   private val destination = "/tmp/akka-yarn/"
@@ -84,7 +88,7 @@ class HdfsReaderIntegTest extends WordSpecLike with HdfsClusterSpec with Matcher
         Future
           .sequence(
             logs.map { log =>
-              val path = new Path("/tmp/akka-yarn", log.path)
+              val path   = new Path("/tmp/akka-yarn", log.path)
               val source = HdfsSource.compressed(fs, path, codec)
               source.runWith(Sink.seq)
             }

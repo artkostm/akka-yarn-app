@@ -13,51 +13,50 @@ import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.duration._
 
-class MultiNodeMasterSpecNode extends MasterSpec
-class MultiNodeWorkerSpecNode extends MasterSpec
+class MultiNodeMasterSpecNode         extends MasterSpec
+class MultiNodeWorkerSpecNode         extends MasterSpec
 class MultiNodeAkkeeperMasterSpecNode extends MasterSpec
 
 object MultiNodeAppConfig extends MultiNodeConfig {
-  val masterNode = role(MasterActorRole)
-  val workerNode = role(WorkerActorRole)
+  val masterNode     = role(MasterActorRole)
+  val workerNode     = role(WorkerActorRole)
   val akkeeperMaster = role(MasterService.MasterServiceName)
 
   testTransport(on = true)
 
-  nodeConfig(masterNode)(ConfigFactory.parseString(
-    s"""
-      |akka.cluster.roles=[$MasterActorRole]
-      |hdfs.file=src/test/resources/test.csv
-      |hdfs.out.dir=/tmp
+  nodeConfig(masterNode)(ConfigFactory.parseString(s"""
+                                                      |akka.cluster.roles=[$MasterActorRole]
+                                                      |hdfs.file=src/test/resources/test.csv
+                                                      |hdfs.out.dir=/tmp
     """.stripMargin))
 
-  nodeConfig(workerNode)(ConfigFactory.parseString(
-    s"""
-      |akka.cluster.roles=[$WorkerActorRole]
+  nodeConfig(workerNode)(ConfigFactory.parseString(s"""
+                                                      |akka.cluster.roles=[$WorkerActorRole]
     """.stripMargin))
 
-  nodeConfig(akkeeperMaster)(ConfigFactory.parseString(
-    s"""
-      |akka.cluster.roles=[${MasterService.MasterServiceName}]
+  nodeConfig(akkeeperMaster)(ConfigFactory.parseString(s"""
+                                                          |akka.cluster.roles=[${MasterService.MasterServiceName}]
     """.stripMargin))
 
-  commonConfig(ConfigFactory.parseString(
-    """
-      |akka.loglevel=INFO
-      |akka.actor.provider = cluster
-      |akka.coordinated-shutdown.run-by-jvm-shutdown-hook = off
-      |akka.coordinated-shutdown.terminate-actor-system = off
-      |akka.cluster.run-coordinated-shutdown-when-down = off
+  commonConfig(ConfigFactory.parseString("""
+                                           |akka.loglevel=INFO
+                                           |akka.actor.provider = cluster
+                                           |akka.coordinated-shutdown.run-by-jvm-shutdown-hook = off
+                                           |akka.coordinated-shutdown.terminate-actor-system = off
+                                           |akka.cluster.run-coordinated-shutdown-when-down = off
     """.stripMargin))
 }
 
-class MasterSpec extends MultiNodeSpec(MultiNodeAppConfig) with MultiNodeAppSpec with ImplicitSender {
+class MasterSpec
+    extends MultiNodeSpec(MultiNodeAppConfig)
+    with MultiNodeAppSpec
+    with ImplicitSender {
   import MultiNodeAppConfig._
 
   override def initialParticipants: Int = roles.size
 
-  val masterAddress = node(masterNode).address
-  val workerAddress = node(workerNode).address
+  val masterAddress         = node(masterNode).address
+  val workerAddress         = node(workerNode).address
   val akkeeperMasterAddress = node(akkeeperMaster).address
 
   var masterActor: Option[ActorRef] = None

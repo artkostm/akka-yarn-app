@@ -18,13 +18,15 @@ sealed trait TestUtils {
 
   def generateFakeContent(count: Double, bytes: Long): Sequence[ByteString]
 
-  def generateFakeContentWithPartitions(count: Double, bytes: Long, partition: Int): Sequence[ByteString]
+  def generateFakeContentWithPartitions(count: Double,
+                                        bytes: Long,
+                                        partition: Int): Sequence[ByteString]
 }
 
 object ScalaTestUtils extends TestUtils with Matchers {
   type Sequence[A] = Seq[A]
-  type Pair[A, B] = (A, B)
-  type Assertion = org.scalatest.Assertion
+  type Pair[A, B]  = (A, B)
+  type Assertion   = org.scalatest.Assertion
 
   def generateFakeContent(count: Double, bytes: Long): Sequence[ByteString] =
     ByteBuffer
@@ -34,8 +36,10 @@ object ScalaTestUtils extends TestUtils with Matchers {
       .map(_ => Random.nextPrintableChar)
       .map(ByteString(_))
 
-  def generateFakeContentWithPartitions(count: Double, bytes: Long, partition: Int): Sequence[ByteString] = {
-    val fakeData = generateFakeContent(count, bytes)
+  def generateFakeContentWithPartitions(count: Double,
+                                        bytes: Long,
+                                        partition: Int): Sequence[ByteString] = {
+    val fakeData  = generateFakeContent(count, bytes)
     val groupSize = Math.ceil(fakeData.size / partition.toDouble).toInt
     fakeData.grouped(groupSize).map(list => ByteString(list.map(_.utf8String).mkString)).toList
   }
