@@ -1,14 +1,11 @@
 package by.artsiom.bigdata201.yarn
 
-import java.net.URI
-
-import akka.actor.{Actor, ActorSystem, Kill, PoisonPill, Props}
+import akka.actor.Actor
 import akka.pattern.pipe
-import akka.stream.ActorAttributes.SupervisionStrategy
 import akka.stream.Supervision.Decider
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import akka.stream.scaladsl.{Flow, Framing, Sink}
-import akka.util.{ByteString, Timeout}
+import akka.util.ByteString
 import by.artsiom.bigdata201.yarn.Messages.{Task, TaskResult}
 import by.artsiom.bigdata201.yarn.hdfs.HdfsSource
 import org.apache.hadoop.conf.Configuration
@@ -16,20 +13,20 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import cats.implicits._
 
 import scala.collection.immutable.ListMap
-import scala.concurrent.Await
-import scala.util.{Failure, Success}
 
+/**
+  * Worker actor reads file partitions from HDFS and returns top 3 hotels among couples
+  */
 class WorkerActor extends Actor with WorkerBehaviour {
-
   override def receive: Receive = working
 }
 
 object WorkerActor {
-  val RecordSize      = 24 //22
+  val RecordSize      = 24
   val AdultCount      = "2"
-  val AdultCountIdx   = 13 //14
-  val HotelCountryIdx = 21 //20
-  val HotelMarketIdx  = 22 //21
+  val AdultCountIdx   = 13
+  val HotelCountryIdx = 21
+  val HotelMarketIdx  = 22
   val FieldSeparator  = ","
 }
 
@@ -41,6 +38,7 @@ trait WorkerBehaviour { this: WorkerActor =>
     ActorMaterializerSettings(context.system).withSupervisionStrategy({
       case e: Throwable =>
         e.printStackTrace()
+        context stop self
         Supervision.Stop
     }: Decider)
   )(context.system)
@@ -52,7 +50,7 @@ trait WorkerBehaviour { this: WorkerActor =>
       val result = HdfsSource
         .data(fs, new Path(file))
         .via(
-          Framing.delimiter(ByteString("\n"), //sys.props("line.separator")), System.lineSeparator
+          Framing.delimiter(ByteString(System.lineSeparator),
                             maximumFrameLength = 450,
                             allowTruncation = true)
         )
@@ -73,44 +71,6 @@ trait WorkerBehaviour { this: WorkerActor =>
           TaskResult(
             ListMap(m.toSeq.sortBy(-_._2).take(limit): _*)
         )
-      ) pipeTo master
+      ).pipeTo(master)(self)
   }
-}
-
-object tt extends App {
-  val system = ActorSystem("test")
-
-  implicit val d = system.dispatcher
-
-  class TestActor extends Actor {
-    override def receive: Receive = {
-      case TaskResult(result: Map[(String, String), Int]) =>
-        println(result.mkString("===========\n", "\n", "\n==========="))
-        context stop self
-        context.system.terminate()
-    }
-  }
-
-  val testActor = system.actorOf(Props[TestActor], "test_actor")
-
-  val worker = system.actorOf(Props[WorkerActor], "worker")
-
-  import akka.pattern.ask
-  import scala.concurrent.duration._
-  implicit val timeout = Timeout(50 minutes)
-
-  val f = worker ? Task(testActor, "D:\\homework\\Hadoop.Intro\\train.csv", 3)
-
-  //akka.pattern.gracefulStop(worker, 20 seconds)
-
-  f.onComplete {
-    case Success(_) =>
-      println("Good!")
-      system.terminate()
-    case Failure(exception) =>
-      exception.printStackTrace()
-      system.terminate()
-  }
-
-  Await.ready(system.whenTerminated, Duration.Inf)
 }
