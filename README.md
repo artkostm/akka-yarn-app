@@ -25,7 +25,9 @@ For the sake of simplicity we will use 1 Zookeeper, 1 JournalNode, 2 NameNodes a
 At this point both volumes hold the initial cluster state and can be used as a mountpoint in actual NameNode images.
 
 - Start both NameNodes (separate terminals)
+
 ```docker run --hostname=nn1 -p 50060:50070 --name=nn1 -it -e "NNODE1_IP=nn1" -e "NNODE2_IP=nn2" -e "JN_IPS=jn-1:8485" -e "ZK_IPS=zk-1:2181" --net=hadoop -v /tmp/hadoop-nn1:/mnt/hadoop artkostm/hadoop-ha:v2 /etc/bootstrap.sh -d namenode```
+
 ```docker run --hostname=nn2 --name=nn2 -p 50070:50070 -it -e "NNODE1_IP=nn1" -e "NNODE2_IP=nn2" -e "JN_IPS=jn-1:8485" -e "ZK_IPS=zk-1:2181" --net=hadoop -v /tmp/hadoop-nn2:/mnt/hadoop artkostm/hadoop-ha:v2 /etc/bootstrap.sh -d namenode```
 <br>Now both NameNodes should be running, check it by visiting the WebUI on Port 50060 (nn1) and 50070 (nn2). nn2 should be standby while nn1 is active.
 
@@ -34,5 +36,8 @@ At this point both volumes hold the initial cluster state and can be used as a m
 ```docker run -d -e "NNODE1_IP=nn1" -e "NNODE2_IP=nn2" -e "JN_IPS=jn-1:8485" -e "ZK_IPS=zk-1:2181" --net=hadoop -v /tmp/hadoop-dn-1:/mnt/hadoop artkostm/hadoop-ha:v2 /etc/bootstrap.sh -d datanode```
 
 - Kill the active NameNode to trigger failover.
+
 Just press CTRL-C on the terminal which is attached to the active NameNode. Now watch on the WebUI how the standby NameNode gets active.
 DataNodes are still connected. Wait a bit and restart the formerly active NameNode. Now it will be the standby Node.
+
+put file to hdfs: ```hdfs dfs -put /all.zip hdfs://nn1:8020/tmp```
