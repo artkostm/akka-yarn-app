@@ -15,8 +15,8 @@ import cats.implicits._
 import scala.collection.immutable.ListMap
 
 /**
-  * Worker actor reads file partitions from HDFS and returns top 3 hotels among couples
-  */
+ * Worker actor reads file partitions from HDFS and returns top 3 hotels among couples
+ */
 class WorkerActor extends Actor with WorkerBehaviour {
   override def receive: Receive = working
 }
@@ -66,11 +66,13 @@ trait WorkerBehaviour { this: WorkerActor =>
         )
         .runWith(Sink.last)
 
-      result.map(
-        m =>
-          TaskResult(
-            ListMap(m.toSeq.sortBy(-_._2).take(limit): _*)
+      result
+        .map(
+          m =>
+            TaskResult(
+              ListMap(m.toSeq.sortBy(-_._2).take(limit): _*)
+          )
         )
-      ).pipeTo(master)(self)
+        .pipeTo(master)(self)
   }
 }

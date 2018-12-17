@@ -28,7 +28,7 @@ class MasterActor extends Actor with MasterBehaviour with ActorLogging {
   implicit val executor = context.system.dispatcher
 
   val filePath = context.system.settings.config.getString(HdfsFileSettingName)
-  val outDir = context.system.settings.config.getString(HdfsOutputDirectorySettingName)
+  val outDir   = context.system.settings.config.getString(HdfsOutputDirectorySettingName)
 
   val deployService = DeployService.createRemote(context.system)
 
@@ -64,19 +64,22 @@ trait MasterBehaviour { this: MasterActor =>
       val fs = FileSystem.get(new Configuration())
       Source(result)
         .map(m => HdfsWriteMessage(ByteString(s"${m._1._1}\t${m._1._2}\t${m._2}")))
-        .via(HdfsFlow.data(
-          fs,
-          SyncStrategy.count(3),
-          RotationStrategy.none,
-          HdfsWritingSettings(
-            overwrite = false,
-            newLine = true,
-            lineSeparator = System.lineSeparator(),
-            pathGenerator = FilePathGenerator(
-              (rotationCount, timestamp) => s"$outDir/akka-yarn-$rotationCount-$timestamp.csv"
+        .via(
+          HdfsFlow.data(
+            fs,
+            SyncStrategy.count(3),
+            RotationStrategy.none,
+            HdfsWritingSettings(
+              overwrite = false,
+              newLine = true,
+              lineSeparator = System.lineSeparator(),
+              pathGenerator = FilePathGenerator(
+                (rotationCount, timestamp) => s"$outDir/akka-yarn-$rotationCount-$timestamp.csv"
+              )
             )
           )
-      )).runWith(Sink.ignore)
+        )
+        .runWith(Sink.ignore)
   }
 
   val running: Receive = {

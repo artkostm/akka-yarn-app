@@ -17,10 +17,10 @@ object Dependencies {
   }
 
   lazy val main = Seq(
-    "com.github.izeigerman" %% "akkeeper"   % versions.akkeeper % Provided,
-    "org.apache.hadoop"     % "hadoop-core" % versions.hadoopCore % Provided,
-    "org.typelevel"         %% "cats-core"  % versions.cats,
-    "com.lightbend.akka"    %% "akka-stream-alpakka-hdfs" % versions.alpakka intransitive()
+    "com.github.izeigerman" %% "akkeeper"                 % versions.akkeeper % Provided,
+    "org.apache.hadoop"     % "hadoop-core"               % versions.hadoopCore % Provided,
+    "org.typelevel"         %% "cats-core"                % versions.cats,
+    "com.lightbend.akka"    %% "akka-stream-alpakka-hdfs" % versions.alpakka intransitive ()
   )
 
   lazy val test = Seq(
@@ -28,7 +28,7 @@ object Dependencies {
   )
 
   lazy val unit = test.map(_ % Test) ++ Seq(
-    "com.typesafe.akka" %% "akka-testkit" % versions.akka,
+    "com.typesafe.akka" %% "akka-testkit"        % versions.akka,
     "com.typesafe.akka" %% "akka-stream-testkit" % versions.akka
   ).map(_ % Test)
 
@@ -52,12 +52,12 @@ object Dependencies {
           "org.apache.hadoop"  % "hadoop-common"                     % vh % t classifier tests
         )
   } yield d)
-  
+
   lazy val multiJvm = test.map(_ % MultiJvm) ++ Seq(
-    "com.github.izeigerman" %% "akkeeper"   % versions.akkeeper,
-    "com.typesafe.akka" %% "akka-testkit" % versions.akka,
-    "com.typesafe.akka" %% "akka-stream-testkit" % versions.akka,
-    "com.typesafe.akka" %% "akka-multi-node-testkit" % versions.akka
+    "com.github.izeigerman" %% "akkeeper"                % versions.akkeeper,
+    "com.typesafe.akka"     %% "akka-testkit"            % versions.akka,
+    "com.typesafe.akka"     %% "akka-stream-testkit"     % versions.akka,
+    "com.typesafe.akka"     %% "akka-multi-node-testkit" % versions.akka
   ).map(_ % MultiJvm)
 
   lazy val overrides = Seq(
