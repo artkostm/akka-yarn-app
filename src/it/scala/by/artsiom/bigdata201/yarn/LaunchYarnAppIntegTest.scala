@@ -6,17 +6,12 @@ import org.apache.hadoop.fs.Path
 import org.scalatest.FlatSpec
 
 class LaunchYarnAppIntegTest extends FlatSpec with HdfsClusterSpec with YarnClusterSpec with ZookeeperClusterSpec {
-  "TLauncherMain" should "start yarn app" in {
-    println("Running!!!!")
-    fs.listStatus(new Path("/")).foreach { fileStatus =>
-      println(fileStatus.getPath)
-    }
-    println("Summary")
-    println(fs.getContentSummary(new Path("/")))
-    fs.copyFromLocalFile(new Path("src/it/resources/test.conf"), new Path("/test.conf"))
 
-    println(fs.getContentSummary(new Path("/test.conf")))
-    println(s"traget/scala-2.12/${BuildInfo.JarName}")
+  "LauncherMain" should "start the yarn app" in {
+
+    fs.copyFromLocalFile(new Path("src/it/resources/test.csv"), new Path("/hotels.csv"))
+
+    println(fs.getContentSummary(new Path("/hotels.csv")))
 
     LauncherMain.main(Array(
       "--akkeeperJar", "src/it/resources/akkeeper-assembly-0.3.3.jar",
@@ -28,8 +23,10 @@ class LaunchYarnAppIntegTest extends FlatSpec with HdfsClusterSpec with YarnClus
       s"target/scala-2.12/${BuildInfo.JarName}"
     ))
 
-    println("??????????????Launcher completed!!!!!!!!!!!!!!")
-    Thread.sleep(60000 * 4)
-    // --config ./config.conf /path/to/my.jar
+    Thread.sleep(60000 * 1)
+
+    val fileStatuses =
+      fs.globStatus(new Path("/tmp/akka-yarn-0-*"), (path: Path) => path.getName.endsWith(".csv"))
+    assert(fileStatuses.size == 1)
   }
 }
