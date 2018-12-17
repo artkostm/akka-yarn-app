@@ -40,4 +40,8 @@ At this point both volumes hold the initial cluster state and can be used as a m
 Just press CTRL-C on the terminal which is attached to the active NameNode. Now watch on the WebUI how the standby NameNode gets active.
 DataNodes are still connected. Wait a bit and restart the formerly active NameNode. Now it will be the standby Node.
 
-put file to hdfs: ```hdfs dfs -put /all.zip hdfs://nn1:8020/tmp```
+
+
+Copy all.zip from the host machine to a datanode: ```docker cp mycontainer:/foo.txt foo.txt```
+Then put the file to hdfs: ```hdfs dfs -put /all.zip hdfs://nn1:8020/tmp```
+
