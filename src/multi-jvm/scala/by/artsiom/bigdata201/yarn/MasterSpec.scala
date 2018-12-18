@@ -80,7 +80,7 @@ class MasterSpec
       }
 
       receiveN(3).collect { case MemberUp(m) => m.address }.toSet must be(
-        Set(node(masterNode).address, node(workerNode).address, node(akkeeperMaster).address)
+        Set(masterAddress, workerAddress, akkeeperMasterAddress)
       )
 
       testConductor.enter("all-deployed")
