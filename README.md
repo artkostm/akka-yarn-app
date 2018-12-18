@@ -1,4 +1,4 @@
-### Task 1 Hadoop HA
+### Hadoop HA
 
 For the sake of simplicity we will use 1 Zookeeper, 1 JournalNode, 2 NameNodes and 1 DataNode to be able to run on a single Docker host. It goes without saying that you should adjust these numbers in production.
 
@@ -62,7 +62,7 @@ All files are still accessible on HDFS:
 
 ![NN2 active files](./screenshots/webui_active_nn2_files.png "NN2 active files")
 
-### Task 2 Yarn App
+### Yarn App
 
 Download akkeeper jar and bin for here https://bintray.com/izeigerman/akkeeper/download_file?file_path=akkeeper_2.12-0.3.3.tgz
 
