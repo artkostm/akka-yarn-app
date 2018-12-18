@@ -8,7 +8,8 @@ RUN yum install -y \
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk
 
-RUN curl -s https://archive.apache.org/dist/hadoop/core/hadoop-2.7.7/hadoop-2.7.7.tar.gz | tar -xz -C /usr/local/ \
+RUN yum install -y which \
+  && curl -s https://archive.apache.org/dist/hadoop/core/hadoop-2.7.7/hadoop-2.7.7.tar.gz | tar -xz -C /usr/local/ \
   && cd /usr/local \
   && ln -s ./hadoop-2.7.7 hadoop \
   && rm -rf /var/lib/apt/lists/*
