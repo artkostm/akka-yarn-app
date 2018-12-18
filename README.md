@@ -64,7 +64,7 @@ All files are still accessible on HDFS:
 
 ### Yarn App
 
-Download akkeeper jar and bin for here https://bintray.com/izeigerman/akkeeper/download_file?file_path=akkeeper_2.12-0.3.3.tgz
+Download akkeeper jar and bin from here https://bintray.com/izeigerman/akkeeper/download_file?file_path=akkeeper_2.12-0.3.3.tgz
 
 Build a jar file with actors to deploy: ```sbt assembly```
 
